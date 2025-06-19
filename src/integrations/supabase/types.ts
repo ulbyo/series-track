@@ -9,7 +9,92 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      series: {
+        Row: {
+          created_at: string
+          description: string | null
+          genre: string | null
+          id: string
+          imdb_rating: number | null
+          poster_url: string | null
+          release_year: number | null
+          title: string
+          total_episodes: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          genre?: string | null
+          id?: string
+          imdb_rating?: number | null
+          poster_url?: string | null
+          release_year?: number | null
+          title: string
+          total_episodes?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          genre?: string | null
+          id?: string
+          imdb_rating?: number | null
+          poster_url?: string | null
+          release_year?: number | null
+          title?: string
+          total_episodes?: number | null
+        }
+        Relationships: []
+      }
+      user_series: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_episode: number | null
+          id: string
+          notes: string | null
+          rating: number | null
+          series_id: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["series_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_episode?: number | null
+          id?: string
+          notes?: string | null
+          rating?: number | null
+          series_id: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["series_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_episode?: number | null
+          id?: string
+          notes?: string | null
+          rating?: number | null
+          series_id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["series_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_series_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
+            referencedRelation: "series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +103,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      series_status:
+        | "watching"
+        | "completed"
+        | "on_hold"
+        | "dropped"
+        | "plan_to_watch"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +223,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      series_status: [
+        "watching",
+        "completed",
+        "on_hold",
+        "dropped",
+        "plan_to_watch",
+      ],
+    },
   },
 } as const
