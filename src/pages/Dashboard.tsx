@@ -6,8 +6,9 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { LogOut, Plus, Search, Filter, Star, Calendar, Play } from "lucide-react";
+import { LogOut, Plus, Search, Filter, Star, Calendar, Play, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { AddSeriesModal } from "@/components/AddSeriesModal";
 import type { Database } from "@/integrations/supabase/types";
 
 type Series = Database["public"]["Tables"]["series"]["Row"];
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<SeriesStatus | "all">("all");
+  const [showAddModal, setShowAddModal] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -106,8 +108,8 @@ const Dashboard = () => {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Series added to your list",
+        title: "Added to List",
+        description: "Series added successfully",
       });
       fetchSeries();
     } catch (error: any) {
@@ -157,15 +159,15 @@ const Dashboard = () => {
   const getStatusColor = (status: SeriesStatus) => {
     switch (status) {
       case "watching":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+        return "bg-black text-white";
       case "completed":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        return "bg-gray-800 text-white";
       case "on_hold":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+        return "bg-gray-500 text-white";
       case "dropped":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+        return "bg-gray-400 text-white";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-200 text-black";
     }
   };
 
@@ -182,55 +184,62 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading your series...</p>
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-black rounded-full animate-spin mx-auto mb-3"></div>
+          <p className="text-sm text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              SeriesTracker
-            </h1>
-            <Button
-              onClick={handleSignOut}
-              variant="ghost"
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </Button>
+      <header className="bg-white/90 backdrop-blur-xl border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex justify-between items-center h-14">
+            <h1 className="text-lg font-medium text-black">Series</h1>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setShowAddModal(true)}
+                className="h-8 px-4 text-sm bg-black hover:bg-gray-800 text-white rounded-full transition-all duration-200"
+              >
+                <Plus className="w-4 h-4 mr-1.5" />
+                Add Series
+              </Button>
+              <Button
+                onClick={handleSignOut}
+                variant="ghost"
+                className="h-8 px-3 text-sm text-gray-600 hover:text-black hover:bg-gray-50 rounded-full transition-all duration-200"
+              >
+                <LogOut className="w-4 h-4 mr-1.5" />
+                Sign Out
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-6">
         {/* Search and Filters */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="mb-6">
+          <div className="flex gap-3 mb-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 placeholder="Search series..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12 rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                className="pl-10 h-9 text-sm border-gray-200 bg-gray-50 rounded-lg focus:bg-white transition-colors duration-200"
               />
             </div>
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value as SeriesStatus | "all")}
-              className="h-12 px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="h-9 px-3 text-sm rounded-lg border border-gray-200 bg-gray-50 text-black focus:bg-white transition-colors duration-200"
             >
-              <option value="all">All Status</option>
+              <option value="all">All</option>
               <option value="watching">Watching</option>
               <option value="completed">Completed</option>
               <option value="on_hold">On Hold</option>
@@ -241,54 +250,56 @@ const Dashboard = () => {
         </div>
 
         {/* Series Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredSeries.map((series) => (
             <div
               key={series.id}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200/50 dark:border-gray-700/50"
+              className="bg-white border border-gray-100 rounded-xl hover:shadow-sm transition-all duration-300 overflow-hidden group"
             >
-              <div className="aspect-[3/4] bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 relative">
-                {series.poster_url && (
+              <div className="aspect-[3/4] bg-gray-100 relative overflow-hidden">
+                {series.poster_url ? (
                   <img
                     src={series.poster_url}
                     alt={series.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex items-center gap-2 text-white text-sm mb-2">
-                    <Calendar className="w-4 h-4" />
-                    {series.release_year}
-                    {series.imdb_rating && (
-                      <>
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        {series.imdb_rating}
-                      </>
-                    )}
+                ) : (
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                    <Calendar className="w-8 h-8 text-gray-400" />
                   </div>
+                )}
+                <div className="absolute top-3 right-3 flex items-center gap-1.5 text-white text-xs bg-black/60 backdrop-blur-sm px-2 py-1 rounded-full">
+                  {series.release_year && (
+                    <span>{series.release_year}</span>
+                  )}
+                  {series.imdb_rating && (
+                    <>
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span>{series.imdb_rating}</span>
+                    </>
+                  )}
                 </div>
               </div>
 
               <div className="p-4">
-                <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-2 line-clamp-1">
+                <h3 className="font-medium text-sm text-black mb-1 line-clamp-1">
                   {series.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
+                <p className="text-xs text-gray-600 mb-3 line-clamp-2 leading-relaxed">
                   {series.description}
                 </p>
-                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-3">
+                <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
                   <span>{series.genre}</span>
                   <span>{series.total_episodes} episodes</span>
                 </div>
 
                 {series.user_progress ? (
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Badge className={getStatusColor(series.user_progress.status)}>
+                      <Badge className={`${getStatusColor(series.user_progress.status)} text-xs px-2 py-0.5 rounded-full`}>
                         {getStatusLabel(series.user_progress.status)}
                       </Badge>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
+                      <span className="text-xs text-gray-500">
                         {series.user_progress.current_episode || 0}/{series.total_episodes || 0}
                       </span>
                     </div>
@@ -296,7 +307,7 @@ const Dashboard = () => {
                     {series.total_episodes && (
                       <Progress
                         value={((series.user_progress.current_episode || 0) / series.total_episodes) * 100}
-                        className="h-2"
+                        className="h-1.5 bg-gray-100"
                       />
                     )}
 
@@ -306,22 +317,20 @@ const Dashboard = () => {
                           const nextEpisode = (series.user_progress?.current_episode || 0) + 1;
                           updateProgress(series.user_progress!.id, nextEpisode, series.total_episodes || 0);
                         }}
-                        size="sm"
-                        className="w-full rounded-lg bg-blue-600 hover:bg-blue-700"
+                        className="w-full h-8 text-xs bg-black hover:bg-gray-800 text-white rounded-lg transition-colors duration-200"
                       >
-                        <Play className="w-4 h-4 mr-2" />
-                        Watch Episode {(series.user_progress.current_episode || 0) + 1}
+                        <Play className="w-3 h-3 mr-1.5" />
+                        Episode {(series.user_progress.current_episode || 0) + 1}
                       </Button>
                     )}
                   </div>
                 ) : (
                   <Button
                     onClick={() => addToList(series.id)}
-                    size="sm"
                     variant="outline"
-                    className="w-full rounded-lg border-gray-300 dark:border-gray-600"
+                    className="w-full h-8 text-xs border-gray-200 hover:bg-gray-50 rounded-lg transition-colors duration-200"
                   >
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className="w-3 h-3 mr-1.5" />
                     Add to List
                   </Button>
                 )}
@@ -332,18 +341,24 @@ const Dashboard = () => {
 
         {filteredSeries.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
-              <Search className="w-16 h-16 mx-auto" />
+            <div className="text-gray-300 mb-3">
+              <Search className="w-12 h-12 mx-auto" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+            <h3 className="text-sm font-medium text-black mb-1">
               No series found
             </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Try adjusting your search or filter criteria
+            <p className="text-xs text-gray-600">
+              Try adjusting your search or add a new series
             </p>
           </div>
         )}
       </div>
+
+      <AddSeriesModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSeriesAdded={fetchSeries}
+      />
     </div>
   );
 };
