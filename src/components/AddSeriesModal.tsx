@@ -87,11 +87,11 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
     <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md animate-scale-in">
         <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-lg font-medium text-black">Add New Series</h2>
+          <h2 className="text-sm font-medium text-black">Add New Series</h2>
           <Button
             onClick={onClose}
             variant="ghost" 
-            className="h-8 w-8 p-0 hover:bg-gray-100 rounded-full transition-colors duration-200"
+            className="h-8 w-8 p-0 hover:bg-gray-100 rounded-full transition-colors"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -99,34 +99,34 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-black mb-1.5">
+            <label className="block text-xs font-medium text-black mb-1.5 uppercase tracking-wide">
               Title *
             </label>
             <Input
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               placeholder="Enter series title"
-              className="h-9 text-sm border-gray-200 bg-gray-50 focus:bg-white transition-colors duration-200"
+              className="h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white rounded-lg"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-black mb-1.5">
+            <label className="block text-xs font-medium text-black mb-1.5 uppercase tracking-wide">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
               placeholder="Brief description of the series"
-              rows={3}
-              className="w-full px-3 py-2 text-sm border border-gray-200 bg-gray-50 rounded-lg focus:bg-white focus:ring-1 focus:ring-black focus:border-black transition-colors duration-200 resize-none"
+              rows={2}
+              className="w-full px-3 py-2 text-xs border border-gray-200 bg-gray-50 rounded-lg focus:bg-white focus:ring-1 focus:ring-black focus:border-black transition-colors resize-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-black mb-1.5">
+              <label className="block text-xs font-medium text-black mb-1.5 uppercase tracking-wide">
                 Episodes
               </label>
               <Input
@@ -134,12 +134,12 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
                 value={formData.total_episodes}
                 onChange={(e) => handleInputChange("total_episodes", e.target.value)}
                 placeholder="Total episodes"
-                className="h-9 text-sm border-gray-200 bg-gray-50 focus:bg-white transition-colors duration-200"
+                className="h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white rounded-lg"
                 min="1"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-black mb-1.5">
+              <label className="block text-xs font-medium text-black mb-1.5 uppercase tracking-wide">
                 Year
               </label>
               <Input
@@ -147,7 +147,7 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
                 value={formData.release_year}
                 onChange={(e) => handleInputChange("release_year", e.target.value)}
                 placeholder="Release year"
-                className="h-9 text-sm border-gray-200 bg-gray-50 focus:bg-white transition-colors duration-200"
+                className="h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white rounded-lg"
                 min="1900"
                 max="2030"
               />
@@ -155,19 +155,19 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-black mb-1.5">
+            <label className="block text-xs font-medium text-black mb-1.5 uppercase tracking-wide">
               Genre
             </label>
             <Input
               value={formData.genre}
               onChange={(e) => handleInputChange("genre", e.target.value)}
               placeholder="e.g., Drama, Comedy, Action"
-              className="h-9 text-sm border-gray-200 bg-gray-50 focus:bg-white transition-colors duration-200"
+              className="h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white rounded-lg"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-black mb-1.5">
+            <label className="block text-xs font-medium text-black mb-1.5 uppercase tracking-wide">
               Poster URL
             </label>
             <Input
@@ -175,12 +175,12 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
               value={formData.poster_url}
               onChange={(e) => handleInputChange("poster_url", e.target.value)}
               placeholder="https://example.com/poster.jpg"
-              className="h-9 text-sm border-gray-200 bg-gray-50 focus:bg-white transition-colors duration-200"
+              className="h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white rounded-lg"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-black mb-1.5">
+            <label className="block text-xs font-medium text-black mb-1.5 uppercase tracking-wide">
               IMDb Rating
             </label>
             <Input
@@ -191,7 +191,7 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
               value={formData.imdb_rating}
               onChange={(e) => handleInputChange("imdb_rating", e.target.value)}
               placeholder="e.g., 8.5"
-              className="h-9 text-sm border-gray-200 bg-gray-50 focus:bg-white transition-colors duration-200"
+              className="h-9 text-xs border-gray-200 bg-gray-50 focus:bg-white rounded-lg"
             />
           </div>
 
@@ -200,14 +200,14 @@ export const AddSeriesModal = ({ isOpen, onClose, onSeriesAdded }: AddSeriesModa
               type="button"
               onClick={onClose}
               variant="outline"
-              className="flex-1 h-9 text-sm border-gray-200 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+              className="flex-1 h-9 text-xs border-gray-200 hover:bg-gray-50 rounded-lg"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={loading || !formData.title.trim()}
-              className="flex-1 h-9 text-sm bg-black hover:bg-gray-800 text-white rounded-lg transition-colors duration-200 disabled:opacity-50"
+              className="flex-1 h-9 text-xs bg-black hover:bg-gray-800 text-white rounded-lg disabled:opacity-50"
             >
               {loading ? "Adding..." : "Add Series"}
             </Button>
